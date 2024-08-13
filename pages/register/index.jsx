@@ -1,55 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import {test, login} from "@/apis/auth/auth.api";
-import { useRecoilState } from "recoil";
-import { loginState } from "@/store/atom";
+import { register } from '@/apis/auth/auth.api'; // 경로에 맞게 임포트하세요.
 
-const Login = () => {
+const Signup = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const router = useRouter();
-  const [_, setIsLogin] = useRecoilState(loginState);
-
-  useEffect(()=>{
-    handleTest()
-  },[])
-  
-  const handleTest = async () => {
-    try {
-      const userData = await test();
-      console.log('api test',userData)
-    } catch (error) {
-      console.error('api 오류:', error);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (password !== confirmPassword) {
+      alert('비밀번호가 일치하지 않습니다.');
+      return;
+    }
     try {
-      const result = await login(email, password);
-      if(result){
-        localStorage.setItem("access_token", result.accessToken);
-        localStorage.setItem("refresh_token", result.refreshToken);
-        setIsLogin({ isLogin: true });
-        router.push('/main');
-      }
+      // 회원가입 API 호출
+      const result = await register(username, email, password);
+      console.log('회원가입 성공:', result);
+      // 회원가입 성공 시 페이지 이동
+      router.push('/');
     } catch (error) {
-      console.error('로그인 오류:', error);
-      alert('로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.');
+      console.error('회원가입 오류:', error);
+      alert('회원가입에 실패했습니다. 다시 시도해주세요.');
     }
   };
-
-  const handleSignUpClick = () => {
-    router.push('/register');
-  };
-
 
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <Title>로그인</Title>
+        <Title>회원가입</Title>
+        <Input 
+          type="text" 
+          placeholder="이름" 
+          value={username} 
+          onChange={(e) => setUsername(e.target.value)} 
+        />
         <Input 
           type="email" 
           placeholder="이메일" 
@@ -62,14 +50,19 @@ const Login = () => {
           value={password} 
           onChange={(e) => setPassword(e.target.value)} 
         />
-        <Button type="submit">로그인</Button>
-        <SignUp onClick={handleSignUpClick}>회원가입</SignUp>
+        <Input 
+          type="password" 
+          placeholder="비밀번호 확인" 
+          value={confirmPassword} 
+          onChange={(e) => setConfirmPassword(e.target.value)} 
+        />
+        <Button type="submit">회원가입</Button>
       </Form>
     </Container>
   );
 };
 
-export default Login;
+export default Signup;
 
 const Container = styled.div`
   display: flex;
@@ -92,7 +85,6 @@ const Form = styled.form`
 const Title = styled.h2`
   margin-bottom: 20px;
   text-align: center;
-  color: #000;
 `;
 
 const Input = styled.input`
@@ -108,7 +100,6 @@ const Button = styled.button`
   background-color: #0070f3;
   color: #fff;
   border: none;
-  margin-bottom: 10px;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
@@ -116,11 +107,3 @@ const Button = styled.button`
     background-color: #005bb5;
   }
 `;
-
-const SignUp = styled.p`
-  text-align: center;
-  margin-top: 10px;
-  font-size: 14px;
-  cursor: pointer;
-  text-decoration: underline;
-`

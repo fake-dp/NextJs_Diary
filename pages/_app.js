@@ -1,5 +1,12 @@
-import "@/styles/globals.css";
+import '@/styles/global.css';
+import { RecoilRoot } from 'recoil';
 
-export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+function MyApp({ Component, pageProps }) {
+  return (
+    <RecoilRoot>
+      <Component {...pageProps} />
+    </RecoilRoot>
+  );
 }
+
+export default MyApp;
