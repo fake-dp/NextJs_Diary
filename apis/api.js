@@ -13,8 +13,14 @@ export const post = async (param) => {
 };
 
 export const put = async (param) => {
+    const { url = '', data = {}, headers = {} } = param;
+    const result = await axiosInstance.put(url, data, { headers });
+    return result;
+  };
+
+export const patch = async (param) => {
   const { url = '', data = {}, headers = {} } = param;
-  const result = await axiosInstance.put(url, data, { headers });
+  const result = await axiosInstance.patch(url, data, { headers });
   return result;
 };
 
@@ -27,6 +33,7 @@ export const del = async (param) => {
 export const api = {
   get,
   post,
-  put,
+  patch,
   del,
+  put
 };
