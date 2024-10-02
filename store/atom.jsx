@@ -23,3 +23,9 @@ export const itemListState = atom({
   key: "itemListState",
   default: []
 });
+
+
+export const likedItemsState = atom({
+  key: 'likedItemsState',
+  default: {},
+});

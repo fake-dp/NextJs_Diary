@@ -1,4 +1,4 @@
-import { axiosInstance } from './axios';
+import { axiosInstance , axiosMultipartInstance} from './axios';
 
 export const get = async (param) => {
   const { url = '', headers = {} } = param;
@@ -9,6 +9,18 @@ export const get = async (param) => {
 export const post = async (param) => {
   const { url = '', data = {}, headers = {} } = param;
   const result = await axiosInstance.post(url, data, { headers });
+  return result;
+};
+
+export const mpost = async (param) => {
+  const { url = '', data = {} } = param;
+  const result = await axiosMultipartInstance.post(url, data);
+  return result;
+};
+
+export const mpatch = async (param) => {
+  const { url = '', data = {} } = param;
+  const result = await axiosMultipartInstance.patch(url, data);
   return result;
 };
 
@@ -33,7 +45,9 @@ export const del = async (param) => {
 export const api = {
   get,
   post,
+  mpost,
   patch,
   del,
-  put
+  put,
+  mpatch
 };

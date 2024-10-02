@@ -38,6 +38,15 @@ export default function Detail() {
                     <Title>{item.title}</Title>
                     <Content>{item.content}</Content>
                     <LikeCount>Likes: {item.likeCount}</LikeCount>
+
+                    {/* 이미지가 있을 때 렌더링 */}
+                    {item.imageUrls && item.imageUrls.length > 0 && (
+                        <ImageContainer>
+                            {item.imageUrls.map((url, index) => (
+                                <Image key={index} src={url} alt={`Image ${index + 1}`} />
+                            ))}
+                        </ImageContainer>
+                    )}
                 </>
             ) : (
                 <ErrorMessage>Item not found</ErrorMessage>
@@ -85,4 +94,19 @@ const ErrorMessage = styled.p`
     font-size: 24px;
     color: red;
     text-align: center;
+`;
+
+/* 이미지 관련 스타일 추가 */
+const ImageContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+`;
+
+const Image = styled.img`
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 `;

@@ -9,19 +9,27 @@ import { useRouter } from 'next/router';
 function Posts() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [images, setImages] = useState([]); // 이미지 상태 추가
     const [items, setItems] = useRecoilState(itemListState);
     const router = useRouter();
+
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files);
+        setImages(files);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const result = await postItems(title, content );
+            // postItems API 호출
+            const result = await postItems(title, content, images);
             setItems([result, ...items]);
-            setTitle(''); 
+            setTitle('');
             setContent('');
+            setImages([]);
             router.push('/main');
         } catch (error) {
-            console.error('Error posting item:', error);
+            console.error('게시글 업로드 실패:', error);
         }
     };
 
@@ -46,6 +54,14 @@ function Posts() {
                         placeholder="내용을 입력해주세요"
                         rows={10}
                         required
+                    />
+                </InputWrapper>
+                <InputWrapper>
+                    <Label>이미지 업로드</Label>
+                    <Input
+                        type="file"
+                        onChange={handleImageChange}
+                        multiple
                     />
                 </InputWrapper>
                 <Button type="submit">글 올리기</Button>
